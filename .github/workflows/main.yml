@@ -15,11 +15,7 @@ pipeline{
                  cleanWs()
              }
          }
-         stage('Checkout from Git'){
-             steps{
-                 git branch: 'master', url: 'https://github.com/SRUTHISUKUMARA/DEVOPS-PROJECT.git'
-             }
-         }
+        
          stage("Sonarqube Analysis "){
              steps{
                  withSonarQubeEnv('SonarQube-Server') {
