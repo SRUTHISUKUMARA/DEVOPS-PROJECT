@@ -20,21 +20,7 @@ pipeline{
                  git branch: 'master', url: 'https://github.com/SRUTHISUKUMARA/DEVOPS-PROJECT.git'
              }
          }
-         stage("Sonarqube Analysis "){
-             steps{
-                 withSonarQubeEnv('SonarQube-Server') {
-                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Swiggy-CI \
-                     -Dsonar.projectKey=Swiggy-CI '''
-                 }
-             }
-         }
-         stage("Quality Gate"){
-            steps {
-                 script {
-                     waitForQualityGate abortPipeline: false, credentialsId: 'SonarQube-Token' 
-                 }
-             } 
-         }
+        
          stage('Install Dependencies') {
              steps {
                  sh "npm install"
@@ -65,10 +51,10 @@ pipeline{
              steps{
                  script{
                      dir('Kubernetes') {
-                         kubeconfig(credentialsId: 'kubernetes', serverUrl: '') {
-                         sh 'kubectl delete --all pods'
-                         sh 'kubectl apply -f deployment.yml'
-                         sh 'kubectl apply -f service.yml'
+                        // kubeconfig(credentialsId: 'kubernetes', serverUrl: '') {
+                        // sh 'kubectl delete --all pods'
+                         //sh 'kubectl apply -f deployment.yml'
+                         //sh 'kubectl apply -f service.yml'
                          }   
                      }
                  }
