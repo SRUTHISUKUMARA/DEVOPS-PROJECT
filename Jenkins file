@@ -21,11 +21,7 @@ pipeline{
              }
          }
         
-         stage('Install Dependencies') {
-             steps {
-                 sh "npm install"
-             }
-         }
+        
          stage('TRIVY FS SCAN') {
              steps {
                  sh "trivy fs . > trivyfs.txt"
@@ -42,11 +38,7 @@ pipeline{
                  }
              }
          }
-         stage("TRIVY"){
-             steps{
-                 sh "trivy image ashfaque9x/swiggy-clone:latest > trivyimage.txt" 
-             }
-         }
+        
           stage('Deploy to Kubernets'){
              steps{
                  script{
