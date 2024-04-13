@@ -1,0 +1,47 @@
+pipeline:
+  agent: any
+  tools:
+    - jdk: 'jdk17'
+    - nodejs: 'node16'
+  environment:
+    SCANNER_HOME: 'sonarqube-scanner'
+  stages:
+    - stage: 'Clean Workspace'
+      steps:
+        - cleanWs
+    - stage: 'Checkout from Git'
+      steps:
+        - git:
+            branch: 'master'
+            url: 'https://github.com/SRUTHISUKUMARA/DEVOPS-PROJECT.git'
+    - stage: 'Sonarqube Analysis'
+      steps:
+        - script:
+            sh: |
+              $SCANNER_HOME/bin/sonar-scanner \
+              -Dsonar.projectName=Swiggy-CI \
+              -Dsonar.projectKey=Swiggy-CI
+    - stage: 'Install Dependencies'
+      steps:
+        - sh: 'npm install'
+    - stage: 'Docker Build & Push'
+      steps:
+        - script:
+            docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+              sh 'docker build -t swiggy-clone .'
+              sh 'docker tag swiggy-clone ashfaque9x/swiggy-clone:latest '
+              sh 'docker push ashfaque9x/swiggy-clone:latest '
+            }
+    - stage: 'TRIVY'
+      steps:
+        - sh: 'trivy image ashfaque9x/swiggy-clone:latest > trivyimage.txt'
+    - stage: 'Deploy to Kubernets'
+      steps:
+        - script:
+            dir('Kubernetes') {
+              withKubeConfig([credentialsId: 'kubernetes', serverUrl: '']) {
+                sh 'kubectl delete --all pods'
+                sh 'kubectl apply -f deployment.yml'
+                sh 'kubectl apply -f service.yml'
+              }
+            }
