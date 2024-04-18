@@ -23,8 +23,8 @@ pipeline {
          stage("Sonarqube Analysis "){
              steps{
                  withSonarQubeEnv('SonarQube-Server') {
-                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Swiggy-CI \
-                     -Dsonar.projectKey=Swiggy-CI '''
+                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName= DEVOPS-PROJECT\
+                     -Dsonar.projectKey=DEVOPS-PROJECT '''
                  }
              }
          }
@@ -40,7 +40,7 @@ pipeline {
                  script{
                     withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
                         sh "docker build -t swiggy-clone ."
-                        sh "docker tag swiggy-clone ashfaque9x/swiggy-clone:latest "
+                        sh "docker tag swiggy-clone sruthi891/swiggy-clone:latest "
                         sh "docker push ashfaque9x/swiggy-clone:latest "
                      }
                  }
