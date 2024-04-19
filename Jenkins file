@@ -40,7 +40,7 @@ pipeline {
                  script{
                     withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
                         sh "docker build -t swiggy-clone ."
-                        sh "docker tag swiggy-clone sruthi891/swiggy-clone:latest "
+                        sh "docker tag swiggy-clone ashfaque9x/swiggy-clone:latest "
                         sh "docker push ashfaque9x/swiggy-clone:latest "
                      }
                  }
